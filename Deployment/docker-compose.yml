@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  plip_monitor_db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: plip
+      POSTGRES_PASSWORD: plip123
+      POSTGRES_DB: plip_monitor_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - plip_monitor_data:/var/lib/postgresql/data
+
+  plip_monitor_service:
+    build:
+      context: ../
+      dockerfile: Deployment/Service/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - plip_monitor_db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://plip_monitor_db:5432/plip_monitor_db
+      SPRING_DATASOURCE_USERNAME: plip
+      SPRING_DATASOURCE_PASSWORD: plip123
+
+volumes:
+  plip_monitor_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /Users/venkat/RAJ/Repos/repo_data_volume/plip-monitor/postgres
