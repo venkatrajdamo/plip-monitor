@@ -1,7 +1,9 @@
 package com.plip.monitoring.controller;
 
 
+import com.plip.monitoring.database.entity.CheckResult;
 import com.plip.monitoring.database.entity.Monitor;
+import com.plip.monitoring.service.CheckResultService;
 import com.plip.monitoring.service.MonitorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ public class MonitorController {
 
     @Autowired
     private MonitorService monitorService;
+
+    @Autowired
+    private CheckResultService checkResultService;
 
     @PostMapping
     public ResponseEntity<Monitor> create(@RequestBody Monitor monitor) {
@@ -47,5 +52,10 @@ public class MonitorController {
     public ResponseEntity<Monitor> update(@PathVariable Long id, @RequestBody Monitor monitor) {
         Monitor updated = monitorService.updateMonitor(id, monitor);
         return ResponseEntity.ok(updated);
+    }
+
+    @GetMapping("/{id}/results")
+    public ResponseEntity<List<CheckResult>> getMonitorResults(@PathVariable Long id) {
+        return ResponseEntity.ok(checkResultService.getResultsForMonitor(id));
     }
 }
