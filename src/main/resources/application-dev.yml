@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://plip_monitor_db:5432/plip_monitor_db
+    username: plip
+    password: plip123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
