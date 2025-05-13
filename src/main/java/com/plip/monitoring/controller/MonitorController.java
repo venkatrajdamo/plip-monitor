@@ -3,6 +3,7 @@ package com.plip.monitoring.controller;
 
 import com.plip.monitoring.database.entity.CheckResult;
 import com.plip.monitoring.database.entity.Monitor;
+import com.plip.monitoring.model.MonitorHealthDto;
 import com.plip.monitoring.service.CheckResultService;
 import com.plip.monitoring.service.MonitorService;
 import lombok.RequiredArgsConstructor;
@@ -64,8 +65,19 @@ public class MonitorController {
     }
 
     @GetMapping("/{id}/results")
-    public ResponseEntity<List<CheckResult>> getMonitorResults(@PathVariable Long id) {
-        log.info("Fetching check results for monitor ID: {}", id);
-        return ResponseEntity.ok(checkResultService.getResultsForMonitor(id));
+    public ResponseEntity<List<CheckResult>> getMonitorResults(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        log.info("Fetching up to {} check results for monitor {}", limit, id);
+        return ResponseEntity.ok(checkResultService.getResultsForMonitor(id, limit));
+    }
+
+    @GetMapping("/{id}/health")
+    public ResponseEntity<MonitorHealthDto> getMonitorHealth(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "20") int limit
+    ) {
+        return ResponseEntity.ok(checkResultService.getHealthSummary(id, limit));
     }
 }
