@@ -1,9 +1,10 @@
 spring:
   datasource:
-    url: jdbc:postgresql://plip_monitor_db:5432/plip_monitor_db
+    url: jdbc:postgresql://localhost:5432/plip_monitor_db
     username: plip
     password: plip123
   jpa:
     hibernate:
       ddl-auto: update
+      dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
