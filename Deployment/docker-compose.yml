@@ -2,18 +2,20 @@ version: '3.8'
 
 services:
   plip_monitor_db:
+    container_name: plip_monitor_db
     image: postgres:15
     restart: always
     environment:
-      POSTGRES_USER: plip
-      POSTGRES_PASSWORD: plip123
-      POSTGRES_DB: plip_monitor_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
       - plip_monitor_data:/var/lib/postgresql/data
 
   plip_monitor_service:
+    container_name: plip_monitor_service
     build:
       context: ../
       dockerfile: Deployment/Service/Dockerfile
@@ -24,9 +26,20 @@ services:
       - plip_monitor_db
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://plip_monitor_db:5432/plip_monitor_db
-      SPRING_DATASOURCE_USERNAME: plip
-      SPRING_DATASOURCE_PASSWORD: plip123
-      SPRING_PROFILE: prod
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_PROFILE: ${SPRING_PROFILE}
+
+  jenkins:
+    container_name: jenkins
+    build:
+      context: .
+      dockerfile: Jenkins/Dockerfile-Jenkins
+    ports:
+      - "8081:8080"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
   plip_monitor_data:
@@ -35,3 +48,9 @@ volumes:
       type: none
       o: bind
       device: /Users/venkat/RAJ/Repos/repo_data_volume/plip-monitor/postgres
+  jenkins_home:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /Users/venkat/RAJ/Repos/repo_data_volume/jenkins
