@@ -6,9 +6,9 @@ services:
     image: postgres:15
     restart: always
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${PLIP_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${PLIP_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${PLIP_POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
@@ -25,10 +25,10 @@ services:
     depends_on:
       - plip_monitor_db
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://plip_monitor_db:5432/plip_monitor_db
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-      SPRING_PROFILE: ${SPRING_PROFILE}
+      SPRING_DATASOURCE_URL: ${PLIP_SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${PLIP_SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${PLIP_SPRING_DATASOURCE_PASSWORD}
+      SPRING_PROFILE: ${PLIP_SPRING_PROFILE}
 
   jenkins:
     container_name: jenkins
@@ -47,10 +47,10 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /Users/venkat/RAJ/Repos/repo_data_volume/plip-monitor/postgres
+      device: ${PLIP_MONITOR_DATA_VOLUME}
   jenkins_home:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /Users/venkat/RAJ/Repos/repo_data_volume/jenkins
+      device: ${PLIP_JENKINS_HOME_VOLUME}

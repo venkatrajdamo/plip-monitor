@@ -1,17 +1,32 @@
 pipeline {
   agent any
+
+  environment {
+    PLIP_ENV_FILE = credentials('plip-env-test')
+  }
+
   stages {
+    stage('Prepare .env') {
+      steps {
+        dir('Deployment') {
+          sh 'cp $PLIP_ENV_FILE .env'
+        }
+      }
+    }
+
     stage('Build') {
       steps {
         sh 'mvn clean package -DskipTests'
       }
     }
+
     stage('Test') {
       steps {
         sh 'mvn test'
       }
     }
   }
+
   post {
     success {
       echo 'Build and tests completed successfully.'
