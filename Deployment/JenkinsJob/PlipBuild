@@ -11,7 +11,7 @@ pipeline {
           // Export all key=value pairs in the .env into the environment
           sh '''
             set -a
-            source "$PLIP_ENV_FILE"
+            . "$PLIP_ENV_FILE"
             set +a
           '''
       }
