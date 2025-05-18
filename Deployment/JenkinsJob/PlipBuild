@@ -6,11 +6,14 @@ pipeline {
   }
 
   stages {
-    stage('Prepare .env') {
+    stage('Load Env Vars') {
       steps {
-        dir('Deployment') {
-          sh 'cp $PLIP_ENV_FILE .env'
-        }
+          // Export all key=value pairs in the .env into the environment
+          sh '''
+            set -a
+            source "$PLIP_ENV_FILE"
+            set +a
+          '''
       }
     }
 
